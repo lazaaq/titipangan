@@ -5,12 +5,10 @@
    ```bash
    cp .env.example .env
    ```
-2. Siapkan database MySQL (contoh: `foodbank`) lalu isi kredensial di `.env`:
-   - `DB_HOST`
-   - `DB_PORT`
-   - `DB_DATABASE`
-   - `DB_USERNAME`
-   - `DB_PASSWORD`
+2. Pastikan path database SQLite di `.env` terisi:
+   - `DB_CONNECTION=sqlite`
+   - `DB_DATABASE=database/foodbank.sqlite`
+   File database akan dibuat otomatis jika belum ada.
 3. Jalankan server:
    ```bash
    php -S localhost:8000 -t public

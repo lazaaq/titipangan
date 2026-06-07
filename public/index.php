@@ -239,7 +239,7 @@ if (($uri === '/' || $uri === '/landing') && $method === 'GET') {
     if (empty($brandLeaderboard)) {
         $brandLeaderboard = $pdo->query('
             SELECT
-                CONCAT("Brand ", UPPER(SUBSTRING(MD5(ud.donation_type), 1, 4))) AS brand_name,
+                ud.donation_type AS donation_type,
                 SUM(ud.quantity) AS total_items,
                 SUM(ud.points_awarded) AS total_points
             FROM user_donations ud
@@ -247,6 +247,13 @@ if (($uri === '/' || $uri === '/landing') && $method === 'GET') {
             ORDER BY total_points DESC, total_items DESC
             LIMIT 8
         ')->fetchAll();
+
+        foreach ($brandLeaderboard as &$brandRow) {
+            $donationType = (string) ($brandRow['donation_type'] ?? '');
+            $brandRow['brand_name'] = 'Brand ' . strtoupper(substr(md5($donationType), 0, 4));
+            unset($brandRow['donation_type']);
+        }
+        unset($brandRow);
     }
 
     $testimonialsRaw = $pdo->query('
@@ -607,7 +614,7 @@ if (($uri === '/user' || $uri === '/user/') && $method === 'GET') {
         $statsStmt = $pdo->prepare('
             SELECT
                 COUNT(*) AS total_received,
-                SUM(CASE WHEN DATE_FORMAT(claimed_at, "%Y-%m") = ? THEN 1 ELSE 0 END) AS claims_this_month
+                SUM(CASE WHEN substr(claimed_at, 1, 7) = ? THEN 1 ELSE 0 END) AS claims_this_month
             FROM food_claims
             WHERE user_id = ?
         ');
@@ -1227,7 +1234,7 @@ if (str_starts_with($uri, '/admin')) {
             if ($defaultLocation) {
                 $defaultLocationId = (int) $defaultLocation['id'];
                 $pdo->prepare('DELETE FROM inventory_item_location_stocks WHERE inventory_item_id = ? AND location_id <> ?')->execute([$id, $defaultLocationId]);
-                $upsert = $pdo->prepare('INSERT INTO inventory_item_location_stocks (inventory_item_id, location_id, stock, updated_at) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE stock = VALUES(stock), updated_at = VALUES(updated_at)');
+                $upsert = $pdo->prepare('INSERT INTO inventory_item_location_stocks (inventory_item_id, location_id, stock, updated_at) VALUES (?, ?, ?, ?) ON CONFLICT(inventory_item_id, location_id) DO UPDATE SET stock = excluded.stock, updated_at = excluded.updated_at');
                 $upsert->execute([$id, $defaultLocationId, $stock, date('Y-m-d H:i:s')]);
             }
         }
