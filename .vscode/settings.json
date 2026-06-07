@@ -1,0 +1,8 @@
+{
+    "emmet.includeLanguages": {
+        "php": "html"
+    },
+    "emmet.triggerExpansionOnTab": true,
+    "emmet.showAbbreviationSuggestions": true,
+    "html.autoClosingTags": true
+}

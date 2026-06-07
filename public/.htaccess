@@ -1,0 +1,15 @@
+Options -Indexes -MultiViews
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    RewriteRule "(^|/)\.(?!well-known/)" - [F,L]
+
+    # Let Apache serve existing files and directories directly.
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # Route all other requests to the public front controller.
+    RewriteRule ^ index.php [L,QSA]
+</IfModule>

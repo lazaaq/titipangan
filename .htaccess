@@ -1,0 +1,26 @@
+Options -Indexes -MultiViews
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Block direct access to hidden files and internal app folders.
+    RewriteRule "(^|/)\.(?!well-known/)" - [F,L]
+    RewriteRule "^(?:includes|layouts|components|database|storage|pages)/" - [F,L,NC]
+    RewriteRule "^(?:README\.md|tes\.html|\.env(?:\.example)?|composer\.(?:json|lock)|package(?:-lock)?\.json)$" - [F,L,NC]
+
+    # Static assets live inside /public/assets but are referenced as /assets/...
+    RewriteRule ^assets/(.*)$ public/assets/$1 [L,NC]
+    RewriteRule ^favicon\.ico$ public/favicon.ico [L,NC]
+    RewriteRule ^robots\.txt$ public/robots.txt [L,NC]
+
+    # If the requested file or directory exists inside /public, serve it from there.
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteCond %{DOCUMENT_ROOT}/public%{REQUEST_URI} -f [OR]
+    RewriteCond %{DOCUMENT_ROOT}/public%{REQUEST_URI} -d
+    RewriteRule ^(.*)$ public/$1 [L]
+
+    # Otherwise route the request through the root front controller.
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^ index.php [L,QSA]
+</IfModule>
