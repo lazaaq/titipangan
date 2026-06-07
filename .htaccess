@@ -5,8 +5,8 @@ Options -Indexes -MultiViews
 
     # Block direct access to hidden files and internal app folders.
     RewriteRule "(^|/)\.(?!well-known/)" - [F,L]
-    RewriteRule "^(?:includes|layouts|components|database|storage|pages)/" - [F,L,NC]
-    RewriteRule "^(?:README\.md|tes\.html|\.env(?:\.example)?|composer\.(?:json|lock)|package(?:-lock)?\.json)$" - [F,L,NC]
+    RewriteRule "^(?:includes|layouts|components|database|storage|admin|user)/" - [F,L,NC]
+    RewriteRule "^(?:README\.md|landing\.php|katalog-publik\.php|tes\.html|\.env(?:\.example)?|composer\.(?:json|lock)|package(?:-lock)?\.json)$" - [F,L,NC]
 
     # Static assets live inside /public/assets but are referenced as /assets/...
     RewriteRule ^assets/(.*)$ public/assets/$1 [L,NC]

@@ -188,7 +188,7 @@ if ($uri === '/katalog-publik' && $method === 'GET') {
         ]);
         $inventory = $stmt->fetchAll();
     }
-    require __DIR__ . '/../pages/public_catalog.php';
+    require __DIR__ . '/../katalog-publik.php';
     exit;
 }
 
@@ -276,12 +276,12 @@ if (($uri === '/' || $uri === '/landing') && $method === 'GET') {
         ];
     }
 
-    require __DIR__ . '/../pages/landing.php';
+    require __DIR__ . '/../landing.php';
     exit;
 }
 
 if ($uri === '/landing2' && $method === 'GET') {
-    require __DIR__ . '/../pages/landing.php';
+    require __DIR__ . '/../landing.php';
     exit;
 }
 
@@ -290,7 +290,7 @@ if ($uri === '/user/login' && $method === 'GET') {
         header('Location: /user/');
         exit;
     }
-    require __DIR__ . '/../pages/user/login.php';
+    require __DIR__ . '/../user/login.php';
     exit;
 }
 
@@ -299,7 +299,7 @@ if ($uri === '/user/register' && $method === 'GET') {
         header('Location: /user/');
         exit;
     }
-    require __DIR__ . '/../pages/user/register.php';
+    require __DIR__ . '/../user/register.php';
     exit;
 }
 
@@ -355,7 +355,7 @@ if ($uri === '/user/register/verify' && $method === 'GET') {
         header('Location: /user/register');
         exit;
     }
-    require __DIR__ . '/../pages/user/verify_register_otp.php';
+    require __DIR__ . '/../user/register-verify.php';
     exit;
 }
 
@@ -510,7 +510,7 @@ if ($uri === '/user/login/verify' && $method === 'GET') {
         header('Location: /user/login');
         exit;
     }
-    require __DIR__ . '/../pages/user/verify_otp.php';
+    require __DIR__ . '/../user/login-verify.php';
     exit;
 }
 
@@ -623,7 +623,7 @@ if (($uri === '/user' || $uri === '/user/') && $method === 'GET') {
         ];
     }
 
-    $contentView = __DIR__ . '/../pages/user/dashboard.php';
+    $contentView = __DIR__ . '/../user/dashboard.php';
     require __DIR__ . '/../layouts/app.php';
     exit;
 }
@@ -643,7 +643,7 @@ if ($uri === '/user/profil' && $method === 'GET') {
     }
 
     $title = 'Profil User';
-    $contentView = __DIR__ . '/../pages/user/profile.php';
+    $contentView = __DIR__ . '/../user/profil.php';
     require __DIR__ . '/../layouts/app.php';
     exit;
 }
@@ -839,7 +839,7 @@ if ($uri === '/user/donasi' && $method === 'GET') {
     $donationHistoryStmt->execute([$userId]);
     $donationHistory = $donationHistoryStmt->fetchAll();
     $title = 'Donasi Barang';
-    $contentView = __DIR__ . '/../pages/user/donation.php';
+    $contentView = __DIR__ . '/../user/donasi.php';
     require __DIR__ . '/../layouts/app.php';
     exit;
 }
@@ -860,7 +860,7 @@ if ($uri === '/user/volunteer' && $method === 'GET') {
     $userPoints = (int) ($pointsRow['points'] ?? 0);
     $volunteerLocations = $pdo->query('SELECT id, location_name, city, province FROM volunteer_locations WHERE is_active = 1 ORDER BY location_name ASC')->fetchAll();
     $title = 'Volunteer';
-    $contentView = __DIR__ . '/../pages/user/volunteer.php';
+    $contentView = __DIR__ . '/../user/volunteer.php';
     require __DIR__ . '/../layouts/app.php';
     exit;
 }
@@ -881,7 +881,7 @@ if ($uri === '/user/reward' && $method === 'GET') {
     $rewardHistory = $historyStmt->fetchAll();
 
     $title = 'Reward Points';
-    $contentView = __DIR__ . '/../pages/user/reward.php';
+    $contentView = __DIR__ . '/../user/reward.php';
     require __DIR__ . '/../layouts/app.php';
     exit;
 }
@@ -1092,7 +1092,7 @@ if ($uri === '/regulasi-konsumen' && $method === 'GET') {
 if ($uri === '/dokumen-regulasi' && $method === 'GET') {
     requireUser();
     $title = 'Dokumen & Regulasi';
-    $contentView = __DIR__ . '/../pages/user/documents_regulations.php';
+    $contentView = __DIR__ . '/../user/dokumen-regulasi.php';
     require __DIR__ . '/../layouts/app.php';
     exit;
 }
@@ -1105,7 +1105,7 @@ if ($uri === '/admin/login' && $method === 'GET') {
 
     $error = $_SESSION['login_error'] ?? null;
     unset($_SESSION['login_error']);
-    require __DIR__ . '/../pages/admin/login.php';
+    require __DIR__ . '/../admin/login.php';
     exit;
 }
 
@@ -1144,7 +1144,7 @@ if (str_starts_with($uri, '/admin')) {
         ];
 
         $title = 'Dashboard Admin';
-        $contentView = __DIR__ . '/../pages/admin/dashboard.php';
+        $contentView = __DIR__ . '/../admin/dashboard.php';
         require __DIR__ . '/../layouts/app.php';
         exit;
     }
@@ -1153,7 +1153,7 @@ if (str_starts_with($uri, '/admin')) {
         $inventory = $pdo->query('SELECT * FROM inventory_items ORDER BY updated_at DESC')->fetchAll();
         $inventoryCategories = inventoryCategoryMap();
         $title = 'Kelola Inventori';
-        $contentView = __DIR__ . '/../pages/admin/inventory.php';
+        $contentView = __DIR__ . '/../admin/inventory.php';
         require __DIR__ . '/../layouts/app.php';
         exit;
     }
@@ -1239,7 +1239,7 @@ if (str_starts_with($uri, '/admin')) {
     if ($uri === '/admin/rewards' && $method === 'GET') {
         $rewardCatalog = $pdo->query('SELECT * FROM reward_catalog ORDER BY points_needed ASC, id ASC')->fetchAll();
         $title = 'Kelola Reward';
-        $contentView = __DIR__ . '/../pages/admin/rewards.php';
+        $contentView = __DIR__ . '/../admin/rewards.php';
         require __DIR__ . '/../layouts/app.php';
         exit;
     }
@@ -1348,7 +1348,7 @@ if (str_starts_with($uri, '/admin')) {
         $claims = $pdo->query($sql)->fetchAll();
         $pendingRedeems = $pdo->query('SELECT pr.*, u.full_name, u.phone FROM pickup_redeems pr JOIN users u ON u.id = pr.user_id WHERE pr.status = "pending" ORDER BY pr.created_at DESC LIMIT 50')->fetchAll();
         $title = 'Monitor Klaim';
-        $contentView = __DIR__ . '/../pages/admin/claims.php';
+        $contentView = __DIR__ . '/../admin/claims.php';
         require __DIR__ . '/../layouts/app.php';
         exit;
     }
@@ -1429,7 +1429,7 @@ if (str_starts_with($uri, '/admin')) {
         $adminDonations = $pdo->query($sql)->fetchAll();
         $donationCatalogItems = $pdo->query('SELECT id, item_name, unit FROM donation_catalog_items ORDER BY item_name ASC')->fetchAll();
         $title = 'Form Donasi';
-        $contentView = __DIR__ . '/../pages/admin/donations.php';
+        $contentView = __DIR__ . '/../admin/donasi.php';
         require __DIR__ . '/../layouts/app.php';
         exit;
     }
@@ -1595,7 +1595,7 @@ if (str_starts_with($uri, '/admin')) {
     if ($uri === '/admin/lokasi-volunteer' && $method === 'GET') {
         $volunteerLocations = $pdo->query('SELECT * FROM volunteer_locations ORDER BY updated_at DESC, id DESC')->fetchAll();
         $title = 'Master Lokasi Volunteer';
-        $contentView = __DIR__ . '/../pages/admin/volunteer_locations.php';
+        $contentView = __DIR__ . '/../admin/lokasi-volunteer.php';
         require __DIR__ . '/../layouts/app.php';
         exit;
     }
@@ -1712,7 +1712,7 @@ if (str_starts_with($uri, '/admin')) {
             }
         }
         $title = 'ACC Volunteer';
-        $contentView = __DIR__ . '/../pages/admin/volunteers.php';
+        $contentView = __DIR__ . '/../admin/volunteers.php';
         require __DIR__ . '/../layouts/app.php';
         exit;
     }
@@ -1823,7 +1823,7 @@ if (str_starts_with($uri, '/admin')) {
 
     if ($uri === '/admin/dokumen-regulasi' && $method === 'GET') {
         $title = 'Dokumen & Regulasi';
-        $contentView = __DIR__ . '/../pages/admin/documents_regulations.php';
+        $contentView = __DIR__ . '/../admin/dokumen-regulasi.php';
         require __DIR__ . '/../layouts/app.php';
         exit;
     }
